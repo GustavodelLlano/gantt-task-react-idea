@@ -12,7 +12,7 @@ export type TaskGanttProps = {
   scrollY: number;
   scrollX: number;
 };
-export const TaskGantt: React.FC<TaskGanttProps> = ({
+const TaskGantt: React.FC<TaskGanttProps> = ({
   gridProps,
   calendarProps,
   barProps,
@@ -74,3 +74,6 @@ export const TaskGantt: React.FC<TaskGanttProps> = ({
     </div>
   );
 };
+
+const TaskGanttMemo = React.memo(TaskGantt);
+export { TaskGanttMemo as TaskGantt };

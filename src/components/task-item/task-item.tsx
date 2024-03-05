@@ -23,7 +23,7 @@ export type TaskItemProps = {
   ) => any;
 };
 
-export const TaskItem: React.FC<TaskItemProps> = props => {
+const TaskItem: React.FC<TaskItemProps> = props => {
   const {
     task,
     arrowIndent,
@@ -123,3 +123,6 @@ export const TaskItem: React.FC<TaskItemProps> = props => {
     </g>
   );
 };
+
+const TaskItemMemo = React.memo(TaskItem);
+export { TaskItemMemo as TaskItem };

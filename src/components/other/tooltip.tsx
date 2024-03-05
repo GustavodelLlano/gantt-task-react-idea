@@ -23,7 +23,7 @@ export type TooltipProps = {
     fontFamily: string;
   }>;
 };
-export const Tooltip: React.FC<TooltipProps> = ({
+const Tooltip: React.FC<TooltipProps> = ({
   task,
   rowHeight,
   rtl,
@@ -112,7 +112,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
   );
 };
 
-export const StandardTooltipContent: React.FC<{
+const TooltipMemo = React.memo(Tooltip);
+export { TooltipMemo as Tooltip };
+
+const StandardTooltipContent: React.FC<{
   task: Task;
   fontSize: string;
   fontFamily: string;
@@ -143,3 +146,6 @@ export const StandardTooltipContent: React.FC<{
     </div>
   );
 };
+
+const StandardTooltipContentMemo = React.memo(StandardTooltipContent);
+export { StandardTooltipContentMemo as StandardTooltipContent };

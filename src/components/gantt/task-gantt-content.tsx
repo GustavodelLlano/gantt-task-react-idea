@@ -32,7 +32,7 @@ export type TaskGanttContentProps = {
   setSelectedTask: (taskId: string) => void;
 } & EventOption;
 
-export const TaskGanttContent: React.FC<TaskGanttContentProps> = ({
+const TaskGanttContent: React.FC<TaskGanttContentProps> = ({
   tasks,
   dates,
   ganttEvent,
@@ -300,3 +300,6 @@ export const TaskGanttContent: React.FC<TaskGanttContentProps> = ({
     </g>
   );
 };
+
+const TaskGanttContentMemo = React.memo(TaskGanttContent);
+export { TaskGanttContentMemo as TaskGanttContent };
