@@ -11,9 +11,9 @@ type DateHelperScales =
   | "second"
   | "millisecond";
 
-const intlDTCache = {};
+const intlDTCache: { [key: string]: DateTimeFormat } = {};
 export const getCachedDateTimeFormat = (
-  locString: string | string[],
+  locString: string,
   opts: DateTimeFormatOptions = {}
 ): DateTimeFormat => {
   const key = JSON.stringify([locString, opts]);
