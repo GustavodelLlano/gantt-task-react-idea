@@ -24,7 +24,7 @@ import { HorizontalScroll } from "../other/horizontal-scroll";
 import { removeHiddenTasks, sortTasks } from "../../helpers/other-helper";
 import styles from "./gantt.module.css";
 
-export const Gantt: React.FunctionComponent<GanttProps> = ({
+const Gantt: React.FunctionComponent<GanttProps> = ({
   tasks,
   headerHeight = 50,
   columnWidth = 60,
@@ -503,3 +503,5 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     </div>
   );
 };
+const GanttMemo = React.memo(Gantt);
+export { GanttMemo as Gantt };
