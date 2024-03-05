@@ -4,6 +4,7 @@ import React, {
   useRef,
   useEffect,
   useMemo,
+  useCallback,
 } from "react";
 import { ViewMode, GanttProps, Task } from "../../types/public-types";
 import { GridProps } from "../grid/grid";
@@ -91,12 +92,18 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   const [selectedTask, setSelectedTask] = useState<BarTask>();
   const [failedTask, setFailedTask] = useState<BarTask | null>(null);
 
-  const svgWidth = dateSetup.dates.length * columnWidth;
-  const ganttFullHeight = barTasks.length * rowHeight;
+  const svgWidth = useMemo(
+    () => dateSetup.dates.length * columnWidth,
+    [dateSetup.dates, columnWidth]
+  );
+  const ganttFullHeight = useMemo(
+    () => barTasks.length * rowHeight,
+    [barTasks, rowHeight]
+  );
 
-  const [scrollY, setScrollY] = useState(0);
-  const [scrollX, setScrollX] = useState(-1);
-  const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
+  const scrollX = useRef(-1);
+  const scrollY = useRef(0);
+  const ignoreScrollEvent = useRef(false);
 
   // task change events
   useEffect(() => {
@@ -115,8 +122,8 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     let newDates = seedDates(startDate, endDate, viewMode);
     if (rtl) {
       newDates = newDates.reverse();
-      if (scrollX === -1) {
-        setScrollX(newDates.length * columnWidth);
+      if (scrollX.current === -1) {
+        scrollX.current = newDates.length * columnWidth;
       }
     }
     setDateSetup({ dates: newDates, viewMode });
@@ -183,7 +190,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
         return;
       }
       setCurrentViewDate(viewDate);
-      setScrollX(columnWidth * index);
+      scrollX.current = columnWidth * index;
     }
   }, [
     viewDate,
@@ -255,34 +262,37 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   }, [ganttHeight, tasks, headerHeight, rowHeight]);
 
   // scroll events
-  useEffect(() => {
-    const handleWheel = (event: WheelEvent) => {
+  const handleWheel = useCallback(
+    (event: WheelEvent) => {
       if (event.shiftKey || event.deltaX) {
         const scrollMove = event.deltaX ? event.deltaX : event.deltaY;
-        let newScrollX = scrollX + scrollMove;
+        let newScrollX = scrollX.current + scrollMove;
         if (newScrollX < 0) {
           newScrollX = 0;
         } else if (newScrollX > svgWidth) {
           newScrollX = svgWidth;
         }
-        setScrollX(newScrollX);
+        scrollX.current = newScrollX;
         event.preventDefault();
       } else if (ganttHeight) {
-        let newScrollY = scrollY + event.deltaY;
+        let newScrollY = scrollY.current + event.deltaY;
         if (newScrollY < 0) {
           newScrollY = 0;
         } else if (newScrollY > ganttFullHeight - ganttHeight) {
           newScrollY = ganttFullHeight - ganttHeight;
         }
-        if (newScrollY !== scrollY) {
-          setScrollY(newScrollY);
+        if (newScrollY !== scrollY.current) {
+          scrollY.current = newScrollY;
           event.preventDefault();
         }
       }
 
-      setIgnoreScrollEvent(true);
-    };
+      ignoreScrollEvent.current = true;
+    },
+    [scrollY, scrollX, ganttHeight, svgWidth, rtl, ganttFullHeight]
+  );
 
+  useEffect(() => {
     // subscribe if scroll is necessary
     wrapperRef.current?.addEventListener("wheel", handleWheel, {
       passive: false,
@@ -290,31 +300,29 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     return () => {
       wrapperRef.current?.removeEventListener("wheel", handleWheel);
     };
-  }, [
-    wrapperRef,
-    scrollY,
-    scrollX,
-    ganttHeight,
-    svgWidth,
-    rtl,
-    ganttFullHeight,
-  ]);
+  }, [handleWheel]);
 
   const handleScrollY = (event: SyntheticEvent<HTMLDivElement>) => {
-    if (scrollY !== event.currentTarget.scrollTop && !ignoreScrollEvent) {
-      setScrollY(event.currentTarget.scrollTop);
-      setIgnoreScrollEvent(true);
+    if (
+      scrollY.current !== event.currentTarget.scrollTop &&
+      !ignoreScrollEvent.current
+    ) {
+      scrollY.current = event.currentTarget.scrollTop;
+      ignoreScrollEvent.current = true;
     } else {
-      setIgnoreScrollEvent(false);
+      ignoreScrollEvent.current = false;
     }
   };
 
   const handleScrollX = (event: SyntheticEvent<HTMLDivElement>) => {
-    if (scrollX !== event.currentTarget.scrollLeft && !ignoreScrollEvent) {
-      setScrollX(event.currentTarget.scrollLeft);
-      setIgnoreScrollEvent(true);
+    if (
+      scrollX.current !== event.currentTarget.scrollLeft &&
+      !ignoreScrollEvent.current
+    ) {
+      scrollX.current = event.currentTarget.scrollLeft;
+      ignoreScrollEvent.current = true;
     } else {
-      setIgnoreScrollEvent(false);
+      ignoreScrollEvent.current = false;
     }
   };
 
@@ -323,8 +331,8 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
    */
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     event.preventDefault();
-    let newScrollY = scrollY;
-    let newScrollX = scrollX;
+    let newScrollY = scrollY.current;
+    let newScrollX = scrollX.current;
     let isX = true;
     switch (event.key) {
       case "Down": // IE/Edge specific value
@@ -352,16 +360,16 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
       } else if (newScrollX > svgWidth) {
         newScrollX = svgWidth;
       }
-      setScrollX(newScrollX);
+      scrollX.current = newScrollX;
     } else {
       if (newScrollY < 0) {
         newScrollY = 0;
       } else if (newScrollY > ganttFullHeight - ganttHeight) {
         newScrollY = ganttFullHeight - ganttHeight;
       }
-      setScrollY(newScrollY);
+      scrollY.current = newScrollY;
     }
-    setIgnoreScrollEvent(true);
+    ignoreScrollEvent.current = true;
   };
 
   /**
@@ -439,7 +447,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     tasks: barTasks,
     locale,
     headerHeight,
-    scrollY,
+    scrollY: scrollY.current,
     ganttHeight,
     horizontalContainerClass: styles.horizontalContainer,
     selectedTask,
@@ -463,8 +471,8 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
           calendarProps={calendarProps}
           barProps={barProps}
           ganttHeight={ganttHeight}
-          scrollY={scrollY}
-          scrollX={scrollX}
+          scrollY={scrollY.current}
+          scrollX={scrollX.current}
         />
         {ganttEvent.changedTask && (
           <Tooltip
@@ -474,8 +482,8 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
             svgContainerWidth={svgContainerWidth}
             fontFamily={fontFamily}
             fontSize={fontSize}
-            scrollX={scrollX}
-            scrollY={scrollY}
+            scrollX={scrollX.current}
+            scrollY={scrollY.current}
             task={ganttEvent.changedTask}
             headerHeight={headerHeight}
             taskListWidth={taskListWidth}
@@ -488,7 +496,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
           ganttFullHeight={ganttFullHeight}
           ganttHeight={ganttHeight}
           headerHeight={headerHeight}
-          scroll={scrollY}
+          scroll={scrollY.current}
           onScroll={handleScrollY}
           rtl={rtl}
         />
@@ -496,7 +504,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
       <HorizontalScroll
         svgWidth={svgWidth}
         taskListWidth={taskListWidth}
-        scroll={scrollX}
+        scroll={scrollX.current}
         rtl={rtl}
         onScroll={handleScrollX}
       />
