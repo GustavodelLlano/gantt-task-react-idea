@@ -9,7 +9,7 @@ type ArrowProps = {
   arrowIndent: number;
   rtl: boolean;
 };
-export const Arrow: React.FC<ArrowProps> = ({
+const Arrow: React.FC<ArrowProps> = ({
   taskFrom,
   taskTo,
   rowHeight,
@@ -44,6 +44,9 @@ export const Arrow: React.FC<ArrowProps> = ({
     </g>
   );
 };
+
+const ArrowMemo = React.memo(Arrow);
+export { ArrowMemo as Arrow };
 
 const drownPathAndTriangle = (
   taskFrom: BarTask,

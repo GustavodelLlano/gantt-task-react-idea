@@ -5,7 +5,7 @@ import { BarProgressHandle } from "./bar-progress-handle";
 import { TaskItemProps } from "../task-item";
 import styles from "./bar.module.css";
 
-export const BarSmall: React.FC<TaskItemProps> = ({
+const BarSmall: React.FC<TaskItemProps> = ({
   task,
   isProgressChangeable,
   isDateChangeable,
@@ -46,3 +46,6 @@ export const BarSmall: React.FC<TaskItemProps> = ({
     </g>
   );
 };
+
+const BarSmallMemo = React.memo(BarSmall);
+export { BarSmallMemo as BarSmall };

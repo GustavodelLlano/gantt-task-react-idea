@@ -9,7 +9,8 @@ type BarDateHandleProps = {
   barCornerRadius: number;
   onMouseDown: (event: React.MouseEvent<SVGRectElement, MouseEvent>) => void;
 };
-export const BarDateHandle: React.FC<BarDateHandleProps> = ({
+
+const BarDateHandle: React.FC<BarDateHandleProps> = ({
   x,
   y,
   width,
@@ -30,3 +31,6 @@ export const BarDateHandle: React.FC<BarDateHandleProps> = ({
     />
   );
 };
+
+const BarDateHandleMemo = React.memo(BarDateHandle);
+export { BarDateHandleMemo as BarDateHandle };

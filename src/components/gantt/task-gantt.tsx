@@ -11,6 +11,8 @@ export type TaskGanttProps = {
   ganttHeight: number;
   scrollY: number;
   scrollX: number;
+  svgContainerHeight: number;
+  svgContainerWidth: number;
 };
 const TaskGantt: React.FC<TaskGanttProps> = ({
   gridProps,
@@ -19,11 +21,18 @@ const TaskGantt: React.FC<TaskGanttProps> = ({
   ganttHeight,
   scrollY,
   scrollX,
+  svgContainerHeight,
+  svgContainerWidth,
 }) => {
   const ganttSVGRef = useRef<SVGSVGElement>(null);
   const horizontalContainerRef = useRef<HTMLDivElement>(null);
   const verticalGanttContainerRef = useRef<HTMLDivElement>(null);
-  const newBarProps = { ...barProps, svg: ganttSVGRef };
+  const newBarProps = {
+    ...barProps,
+    svg: ganttSVGRef,
+    svgContainerHeight,
+    svgContainerWidth,
+  };
 
   useEffect(() => {
     if (horizontalContainerRef.current) {

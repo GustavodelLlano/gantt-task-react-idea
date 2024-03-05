@@ -421,6 +421,8 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     arrowIndent,
     svgWidth,
     rtl,
+    svgContainerHeight,
+    svgContainerWidth,
     setGanttEvent,
     setFailedTask,
     setSelectedTask: handleSelectedTask,
@@ -465,6 +467,8 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
           ganttHeight={ganttHeight}
           scrollY={scrollY}
           scrollX={scrollX}
+          svgContainerHeight={svgContainerHeight}
+          svgContainerWidth={svgContainerWidth}
         />
         {ganttEvent.changedTask && (
           <Tooltip

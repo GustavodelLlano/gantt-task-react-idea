@@ -27,6 +27,8 @@ export type TaskGanttContentProps = {
   fontSize: string;
   fontFamily: string;
   rtl: boolean;
+  svgContainerHeight: number;
+  svgContainerWidth: number;
   setGanttEvent: (value: GanttEvent) => void;
   setFailedTask: (value: BarTask | null) => void;
   setSelectedTask: (taskId: string) => void;
@@ -47,6 +49,8 @@ const TaskGanttContent: React.FC<TaskGanttContentProps> = ({
   fontFamily,
   fontSize,
   rtl,
+  svgContainerHeight,
+  svgContainerWidth,
   setGanttEvent,
   setFailedTask,
   setSelectedTask,

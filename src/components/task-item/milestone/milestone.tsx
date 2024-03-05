@@ -2,7 +2,7 @@ import React from "react";
 import { TaskItemProps } from "../task-item";
 import styles from "./milestone.module.css";
 
-export const Milestone: React.FC<TaskItemProps> = ({
+const Milestone: React.FC<TaskItemProps> = ({
   task,
   isDateChangeable,
   onEventStart,
@@ -35,3 +35,6 @@ export const Milestone: React.FC<TaskItemProps> = ({
     </g>
   );
 };
+
+const MilestoneMemo = React.memo(Milestone);
+export { MilestoneMemo as Milestone };

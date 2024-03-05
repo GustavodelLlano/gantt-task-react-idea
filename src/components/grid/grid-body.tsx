@@ -12,7 +12,7 @@ export type GridBodyProps = {
   todayColor: string;
   rtl: boolean;
 };
-export const GridBody: React.FC<GridBodyProps> = ({
+const GridBody: React.FC<GridBodyProps> = ({
   tasks,
   dates,
   rowHeight,
@@ -125,3 +125,6 @@ export const GridBody: React.FC<GridBodyProps> = ({
     </g>
   );
 };
+
+const GridBodyMemo = React.memo(GridBody);
+export { GridBodyMemo as GridBody };

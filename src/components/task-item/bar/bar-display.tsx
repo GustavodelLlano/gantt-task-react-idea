@@ -19,7 +19,8 @@ type BarDisplayProps = {
   };
   onMouseDown: (event: React.MouseEvent<SVGPolygonElement, MouseEvent>) => void;
 };
-export const BarDisplay: React.FC<BarDisplayProps> = ({
+
+const BarDisplay: React.FC<BarDisplayProps> = ({
   x,
   y,
   width,
@@ -63,3 +64,6 @@ export const BarDisplay: React.FC<BarDisplayProps> = ({
     </g>
   );
 };
+
+const BarDisplayMemo = React.memo(BarDisplay);
+export { BarDisplayMemo as BarDisplay };
