@@ -49,8 +49,6 @@ const TaskGanttContent: React.FC<TaskGanttContentProps> = ({
   fontFamily,
   fontSize,
   rtl,
-  svgContainerHeight,
-  svgContainerWidth,
   setGanttEvent,
   setFailedTask,
   setSelectedTask,
