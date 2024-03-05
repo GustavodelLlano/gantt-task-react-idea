@@ -1,6 +1,6 @@
 {
   "name": "gantt-task-react-idea",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Interactive Gantt Chart for React with TypeScript.",
   "author": "Gustavo del Llano, based on: MaTeMaTuK <maksym.vikarii@gmail.com>",
   "homepage": "https://github.com/GustavodelLlano/gantt-task-react-idea",
