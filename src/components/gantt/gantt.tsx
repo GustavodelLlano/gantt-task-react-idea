@@ -105,6 +105,8 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   const [scrollX, setScrollX] = useState(-1);
   const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
+  console.log("rerendering inisde Gantt");
+
   // task change events
   useEffect(() => {
     let filteredTasks: Task[];

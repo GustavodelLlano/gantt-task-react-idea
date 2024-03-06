@@ -21,7 +21,7 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
   day: "numeric",
 };
 
-export const TaskListTableDefault: React.FC<{
+const TaskListTableDefault: React.FC<{
   rowHeight: number;
   rowWidth: string;
   fontFamily: string;
@@ -113,3 +113,7 @@ export const TaskListTableDefault: React.FC<{
     </div>
   );
 };
+
+const TaskListTableDefaultMemo = React.memo(TaskListTableDefault);
+
+export { TaskListTableDefaultMemo as TaskListTableDefault };

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./task-list-header.module.css";
 
-export const TaskListHeaderDefault: React.FC<{
+const TaskListHeaderDefault: React.FC<{
   headerHeight: number;
   rowWidth: string;
   fontFamily: string;
@@ -63,3 +63,7 @@ export const TaskListHeaderDefault: React.FC<{
     </div>
   );
 };
+
+const TaskListHeaderDefaultMemo = React.memo(TaskListHeaderDefault);
+
+export { TaskListHeaderDefaultMemo as TaskListHeaderDefault };
