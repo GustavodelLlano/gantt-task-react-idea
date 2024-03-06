@@ -50,7 +50,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   handleWidth = 8,
   timeStep = 300000,
   arrowColor = "grey",
-  fontFamily = "Arial, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue",
+  fontFamily = "Montserrat, Arial, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue",
   fontSize = "14px",
   arrowIndent = 20,
   todayColor = "rgba(252, 248, 227, 0.5)",
@@ -91,8 +91,15 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   const [selectedTask, setSelectedTask] = useState<BarTask>();
   const [failedTask, setFailedTask] = useState<BarTask | null>(null);
 
-  const svgWidth = dateSetup.dates.length * columnWidth;
-  const ganttFullHeight = barTasks.length * rowHeight;
+  const svgWidth = useMemo(
+    () => dateSetup.dates.length * columnWidth,
+    [dateSetup.dates.length, columnWidth]
+  );
+
+  const ganttFullHeight = useMemo(
+    () => barTasks.length * rowHeight,
+    [barTasks, rowHeight]
+  );
 
   const [scrollY, setScrollY] = useState(0);
   const [scrollX, setScrollX] = useState(-1);
