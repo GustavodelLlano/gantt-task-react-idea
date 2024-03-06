@@ -395,8 +395,6 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     dates: dateSetup.dates,
     todayColor,
     rtl,
-    svgContainerHeight,
-    svgContainerWidth,
   };
   const calendarProps: CalendarProps = {
     dateSetup,
