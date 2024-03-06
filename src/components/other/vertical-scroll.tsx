@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useRef, useEffect } from "react";
 import styles from "./vertical-scroll.module.css";
 
-export const VerticalScroll: React.FC<{
+const VerticalScroll: React.FC<{
   scroll: number;
   ganttHeight: number;
   ganttFullHeight: number;
@@ -39,3 +39,6 @@ export const VerticalScroll: React.FC<{
     </div>
   );
 };
+
+const VerticalScrollMemo = React.memo(VerticalScroll);
+export { VerticalScrollMemo as VerticalScroll };

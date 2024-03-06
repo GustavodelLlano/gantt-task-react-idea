@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useRef, useEffect } from "react";
 import styles from "./horizontal-scroll.module.css";
 
-export const HorizontalScroll: React.FC<{
+const HorizontalScroll: React.FC<{
   scroll: number;
   svgWidth: number;
   taskListWidth: number;
@@ -32,3 +32,6 @@ export const HorizontalScroll: React.FC<{
     </div>
   );
 };
+
+const HorizontalScrollMemo = React.memo(HorizontalScroll);
+export { HorizontalScrollMemo as HorizontalScroll };

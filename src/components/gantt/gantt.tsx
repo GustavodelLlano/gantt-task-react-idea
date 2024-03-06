@@ -322,8 +322,9 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   ]);
 
   const handleScrollY = debounce((event: SyntheticEvent<HTMLDivElement>) => {
-    if (scrollY !== event.currentTarget.scrollTop && !ignoreScrollEvent) {
-      setScrollY(event.currentTarget.scrollTop);
+    const newScrollY = event.currentTarget.scrollTop;
+    if (newScrollY && scrollY !== newScrollY && !ignoreScrollEvent) {
+      setScrollY(newScrollY);
       setIgnoreScrollEvent(true);
     } else {
       setIgnoreScrollEvent(false);
@@ -331,8 +332,10 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   }, 200);
 
   const handleScrollX = debounce((event: SyntheticEvent<HTMLDivElement>) => {
-    if (scrollX !== event.currentTarget.scrollLeft && !ignoreScrollEvent) {
-      setScrollX(event.currentTarget.scrollLeft);
+    const newScrollX = event.currentTarget.scrollLeft;
+
+    if (newScrollX && scrollX !== newScrollX && !ignoreScrollEvent) {
+      setScrollX(newScrollX);
       setIgnoreScrollEvent(true);
     } else {
       setIgnoreScrollEvent(false);
