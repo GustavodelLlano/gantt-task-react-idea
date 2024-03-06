@@ -34,6 +34,8 @@ const TaskGantt: React.FC<TaskGanttProps> = ({
     svgContainerWidth,
   };
 
+  const newGridProps = { ...gridProps, svgContainerHeight, svgContainerWidth };
+
   useEffect(() => {
     if (horizontalContainerRef.current) {
       horizontalContainerRef.current.scrollTop = scrollY;
@@ -76,7 +78,7 @@ const TaskGantt: React.FC<TaskGanttProps> = ({
           fontFamily={barProps.fontFamily}
           ref={ganttSVGRef}
         >
-          <Grid {...gridProps} />
+          <Grid {...newGridProps} />
           <TaskGanttContent {...newBarProps} />
         </svg>
       </div>
