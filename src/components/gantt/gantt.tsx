@@ -105,7 +105,19 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   const [scrollX, setScrollX] = useState(-1);
   const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
-  console.log("rerendering inisde Gantt");
+  function debounce<F extends (...args: any[]) => any>(
+    callback: F,
+    wait: number
+  ) {
+    let timerId: NodeJS.Timeout | null = null;
+    return (...args: Parameters<F>): void => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+      timerId = setTimeout(() => callback(...args), wait);
+    };
+  }
+  console.log("rerendering inisde Gannt");
 
   // task change events
   useEffect(() => {
@@ -309,23 +321,23 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     ganttFullHeight,
   ]);
 
-  const handleScrollY = (event: SyntheticEvent<HTMLDivElement>) => {
+  const handleScrollY = debounce((event: SyntheticEvent<HTMLDivElement>) => {
     if (scrollY !== event.currentTarget.scrollTop && !ignoreScrollEvent) {
       setScrollY(event.currentTarget.scrollTop);
       setIgnoreScrollEvent(true);
     } else {
       setIgnoreScrollEvent(false);
     }
-  };
+  }, 200);
 
-  const handleScrollX = (event: SyntheticEvent<HTMLDivElement>) => {
+  const handleScrollX = debounce((event: SyntheticEvent<HTMLDivElement>) => {
     if (scrollX !== event.currentTarget.scrollLeft && !ignoreScrollEvent) {
       setScrollX(event.currentTarget.scrollLeft);
       setIgnoreScrollEvent(true);
     } else {
       setIgnoreScrollEvent(false);
     }
-  };
+  }, 200);
 
   /**
    * Handles arrow keys events and transform it to new scroll
