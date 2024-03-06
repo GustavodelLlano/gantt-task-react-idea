@@ -1,5 +1,4 @@
 import React, { ReactChild } from "react";
-import { FixedSizeList as List } from "react-window";
 import { Task } from "../../types/public-types";
 import { addToDate } from "../../helpers/date-helper";
 import styles from "./grid.module.css";
@@ -12,8 +11,6 @@ export type GridBodyProps = {
   columnWidth: number;
   todayColor: string;
   rtl: boolean;
-  svgContainerHeight: number;
-  svgContainerWidth: number;
 };
 const GridBody: React.FC<GridBodyProps> = ({
   tasks,
@@ -23,74 +20,42 @@ const GridBody: React.FC<GridBodyProps> = ({
   columnWidth,
   todayColor,
   rtl,
-  svgContainerHeight,
-  svgContainerWidth,
 }) => {
   let y = 0;
-  // const gridRows: ReactChild[] = [];
-  // const rowLines: ReactChild[] = [
-  //   <line
-  //     key="RowLineFirst"
-  //     x="0"
-  //     y1={0}
-  //     x2={svgWidth}
-  //     y2={0}
-  //     className={styles.gridRowLine}
-  //   />,
-  // ];
-  const Row = ({
-    index,
-    style,
-  }: {
-    index: number;
-    style: React.CSSProperties;
-  }) => {
-    const task = tasks[index];
-    return (
-      <g style={style}>
-        <rect
-          key={"Row" + task.id}
-          x="0"
-          y={0}
-          width={svgWidth}
-          height={rowHeight}
-          className={styles.gridRow}
-        />
-        <line
-          key={"RowLine" + task.id}
-          x="0"
-          y1={rowHeight}
-          x2={svgWidth}
-          y2={rowHeight}
-          className={styles.gridRowLine}
-        />
-      </g>
+  const gridRows: ReactChild[] = [];
+  const rowLines: ReactChild[] = [
+    <line
+      key="RowLineFirst"
+      x="0"
+      y1={0}
+      x2={svgWidth}
+      y2={0}
+      className={styles.gridRowLine}
+    />,
+  ];
+  for (const task of tasks) {
+    gridRows.push(
+      <rect
+        key={"Row" + task.id}
+        x="0"
+        y={y}
+        width={svgWidth}
+        height={rowHeight}
+        className={styles.gridRow}
+      />
     );
-  };
-
-  // for (const task of tasks) {
-  //   gridRows.push(
-  //     <rect
-  //       key={"Row" + task.id}
-  //       x="0"
-  //       y={y}
-  //       width={svgWidth}
-  //       height={rowHeight}
-  //       className={styles.gridRow}
-  //     />
-  //   );
-  //   rowLines.push(
-  //     <line
-  //       key={"RowLine" + task.id}
-  //       x="0"
-  //       y1={y + rowHeight}
-  //       x2={svgWidth}
-  //       y2={y + rowHeight}
-  //       className={styles.gridRowLine}
-  //     />
-  //   );
-  //   y += rowHeight;
-  // }
+    rowLines.push(
+      <line
+        key={"RowLine" + task.id}
+        x="0"
+        y1={y + rowHeight}
+        x2={svgWidth}
+        y2={y + rowHeight}
+        className={styles.gridRowLine}
+      />
+    );
+    y += rowHeight;
+  }
 
   const now = new Date();
   let tickX = 0;
@@ -153,16 +118,8 @@ const GridBody: React.FC<GridBodyProps> = ({
   }
   return (
     <g className="gridBody">
-      {/* <g className="rows">{gridRows}</g>
-      <g className="rowLines">{rowLines}</g> */}
-      <List
-        height={svgContainerHeight}
-        itemCount={tasks.length}
-        itemSize={rowHeight}
-        width={svgContainerWidth}
-      >
-        {Row}
-      </List>
+      <g className="rows">{gridRows}</g>
+      <g className="rowLines">{rowLines}</g>
       <g className="ticks">{ticks}</g>
       <g className="today">{today}</g>
     </g>
