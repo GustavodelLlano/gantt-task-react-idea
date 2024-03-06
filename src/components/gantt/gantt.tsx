@@ -117,7 +117,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
       timerId = setTimeout(() => callback(...args), wait);
     };
   }
-  console.log("rerendering inisde Gannt");
+  console.log("rerendering inisde Gannt hola hola");
 
   // task change events
   useEffect(() => {
