@@ -117,6 +117,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
       timerId = setTimeout(() => callback(...args), wait);
     };
   }
+
   console.log("rerendering inisde Gannt hola hola");
 
   // task change events
@@ -276,32 +277,83 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   }, [ganttHeight, tasks, headerHeight, rowHeight]);
 
   // scroll events
+  // useEffect(() => {
+  //   const handleWheel = (event: WheelEvent) => {
+  //     if (event.shiftKey || event.deltaX) {
+  //       const scrollMove = event.deltaX ? event.deltaX : event.deltaY;
+  //       let newScrollX = scrollX + scrollMove;
+  //       if (newScrollX < 0) {
+  //         newScrollX = 0;
+  //       } else if (newScrollX > svgWidth) {
+  //         newScrollX = svgWidth;
+  //       }
+  //       setScrollX(newScrollX);
+  //       event.preventDefault();
+  //     } else if (ganttHeight) {
+  //       let newScrollY = scrollY + event.deltaY;
+  //       if (newScrollY < 0) {
+  //         newScrollY = 0;
+  //       } else if (newScrollY > ganttFullHeight - ganttHeight) {
+  //         newScrollY = ganttFullHeight - ganttHeight;
+  //       }
+  //       if (newScrollY !== scrollY) {
+  //         setScrollY(newScrollY);
+  //         event.preventDefault();
+  //       }
+  //     }
+
+  //     setIgnoreScrollEvent(true);
+  //   };
+
+  //   // subscribe if scroll is necessary
+  //   wrapperRef.current?.addEventListener("wheel", handleWheel, {
+  //     passive: false,
+  //   });
+  //   return () => {
+  //     wrapperRef.current?.removeEventListener("wheel", handleWheel);
+  //   };
+  // }, [
+  //   wrapperRef,
+  //   scrollY,
+  //   scrollX,
+  //   ganttHeight,
+  //   svgWidth,
+  //   rtl,
+  //   ganttFullHeight,
+  // ]);
+
   useEffect(() => {
+    let frameId: number | null = null;
+    let newScrollX = scrollX;
+    let newScrollY = scrollY;
+
     const handleWheel = (event: WheelEvent) => {
       if (event.shiftKey || event.deltaX) {
         const scrollMove = event.deltaX ? event.deltaX : event.deltaY;
-        let newScrollX = scrollX + scrollMove;
+        newScrollX += scrollMove;
         if (newScrollX < 0) {
           newScrollX = 0;
         } else if (newScrollX > svgWidth) {
           newScrollX = svgWidth;
         }
-        setScrollX(newScrollX);
         event.preventDefault();
       } else if (ganttHeight) {
-        let newScrollY = scrollY + event.deltaY;
+        newScrollY += event.deltaY;
         if (newScrollY < 0) {
           newScrollY = 0;
         } else if (newScrollY > ganttFullHeight - ganttHeight) {
           newScrollY = ganttFullHeight - ganttHeight;
         }
-        if (newScrollY !== scrollY) {
-          setScrollY(newScrollY);
-          event.preventDefault();
-        }
+        event.preventDefault();
       }
 
-      setIgnoreScrollEvent(true);
+      if (frameId === null) {
+        frameId = requestAnimationFrame(() => {
+          setScrollX(newScrollX);
+          setScrollY(newScrollY);
+          frameId = null;
+        });
+      }
     };
 
     // subscribe if scroll is necessary
@@ -309,6 +361,9 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
       passive: false,
     });
     return () => {
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
+      }
       wrapperRef.current?.removeEventListener("wheel", handleWheel);
     };
   }, [
@@ -321,7 +376,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     ganttFullHeight,
   ]);
 
-  const handleScrollY = debounce((event: SyntheticEvent<HTMLDivElement>) => {
+  const handleScrollY = (event: SyntheticEvent<HTMLDivElement>) => {
     const newScrollY = event.currentTarget?.scrollTop;
     if (newScrollY && scrollY !== newScrollY && !ignoreScrollEvent) {
       setScrollY(newScrollY);
@@ -329,9 +384,9 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     } else {
       setIgnoreScrollEvent(false);
     }
-  }, 200);
+  };
 
-  const handleScrollX = debounce((event: SyntheticEvent<HTMLDivElement>) => {
+  const handleScrollX = (event: SyntheticEvent<HTMLDivElement>) => {
     const newScrollX = event.currentTarget?.scrollLeft;
 
     if (newScrollX && scrollX !== newScrollX && !ignoreScrollEvent) {
@@ -340,7 +395,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     } else {
       setIgnoreScrollEvent(false);
     }
-  }, 200);
+  };
 
   /**
    * Handles arrow keys events and transform it to new scroll
