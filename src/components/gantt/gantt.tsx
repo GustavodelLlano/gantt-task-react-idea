@@ -105,18 +105,18 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   const [scrollX, setScrollX] = useState(-1);
   const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
-  function debounce<F extends (...args: any[]) => any>(
-    callback: F,
-    wait: number
-  ) {
-    let timerId: NodeJS.Timeout | null = null;
-    return (...args: Parameters<F>): void => {
-      if (timerId) {
-        clearTimeout(timerId);
-      }
-      timerId = setTimeout(() => callback(...args), wait);
-    };
-  }
+  // function debounce<F extends (...args: any[]) => any>(
+  //   callback: F,
+  //   wait: number
+  // ) {
+  //   let timerId: NodeJS.Timeout | null = null;
+  //   return (...args: Parameters<F>): void => {
+  //     if (timerId) {
+  //       clearTimeout(timerId);
+  //     }
+  //     timerId = setTimeout(() => callback(...args), wait);
+  //   };
+  // }
 
   console.log("rerendering inisde Gannt hola hola");
 
